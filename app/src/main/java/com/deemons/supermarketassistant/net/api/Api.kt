@@ -14,7 +14,9 @@ interface Api {
         const val BASE_HOST = "http://webapi.chinatrace.org/"
     }
 
-
+    /**
+     * http://webapi.chinatrace.org/api/getProductData?productCode=6954306880269&mac=8BF8634ABC27F2A21B66D9148F7D080BE0C2BF712E57A568D071B612397E6392
+     */
     @GET("api/getProductData")
     abstract fun getProductData(
         @Query("productCode") productCode: String,
