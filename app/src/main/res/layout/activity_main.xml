@@ -31,4 +31,15 @@
             android:layout_height="wrap_content"/>
 
 
+    <Button
+            android:id="@+id/main_count"
+            android:text="统计"
+            android:onClick="count"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
 </android.support.constraint.ConstraintLayout>

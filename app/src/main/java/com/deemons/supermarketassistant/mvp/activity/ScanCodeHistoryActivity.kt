@@ -10,15 +10,14 @@ import com.chad.library.adapter.base.listener.OnItemSwipeListener
 import com.deemons.supermarketassistant.R
 import com.deemons.supermarketassistant.base.BaseActivity
 import com.deemons.supermarketassistant.base.EPresenter
-import com.deemons.supermarketassistant.di.component.ActivityComponent
 import com.deemons.supermarketassistant.databinding.ActivityScanCodeHistoryBinding
+import com.deemons.supermarketassistant.di.component.ActivityComponent
 import com.deemons.supermarketassistant.sql.model.ScanCodeModel
 import com.deemons.supermarketassistant.tools.TimeUtils
 import com.vondear.rxtool.RxClipboardTool
 import com.vondear.rxtool.view.RxToast
 import io.objectbox.BoxStore
 import org.joda.time.DateTime
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 class ScanCodeHistoryActivity : BaseActivity<EPresenter, ActivityScanCodeHistoryBinding>() {
@@ -38,6 +37,8 @@ class ScanCodeHistoryActivity : BaseActivity<EPresenter, ActivityScanCodeHistory
     }
 
     override fun initEventAndData() {
+
+        mBinding.historyBack.setOnClickListener { onBackPressed() }
 
         initRv()
 
@@ -76,7 +77,7 @@ class ScanCodeHistoryActivity : BaseActivity<EPresenter, ActivityScanCodeHistory
             }
 
             override fun clearView(viewHolder: RecyclerView.ViewHolder?, pos: Int) {
-                adapter.notifyDataSetChanged()
+
             }
 
         })
@@ -112,5 +113,9 @@ class ScanCodeHistoryActivity : BaseActivity<EPresenter, ActivityScanCodeHistory
         RxToast.showToast("复制成功")
     }
 
+    fun delete(view: View) {
+        scanCodeModelStore.removeAll()
+        adapter.setNewData(listOf())
+    }
 
 }

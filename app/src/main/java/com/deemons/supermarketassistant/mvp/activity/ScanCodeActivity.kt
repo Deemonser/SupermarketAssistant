@@ -15,7 +15,6 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.SurfaceHolder
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback
 import com.chad.library.adapter.base.listener.OnItemSwipeListener
@@ -23,7 +22,6 @@ import com.deemons.supermarketassistant.R
 import com.deemons.supermarketassistant.base.BaseActivity
 import com.deemons.supermarketassistant.databinding.ActivityScanCodeBinding
 import com.deemons.supermarketassistant.di.component.ActivityComponent
-import com.deemons.supermarketassistant.base.EPresenter
 import com.deemons.supermarketassistant.mvp.presenter.ScanCodePresenter
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
@@ -32,7 +30,6 @@ import com.vondear.rxfeature.module.scaner.decoding.InactivityTimer
 import com.vondear.rxtool.RxAnimationTool
 import com.vondear.rxtool.RxBarTool
 import com.vondear.rxtool.RxBeepTool
-import com.vondear.rxtool.view.RxToast
 import io.reactivex.Observable
 import java.io.IOException
 import java.util.*
@@ -106,7 +103,7 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
 
 
         // 开启滑动删除
-        adapter.enableSwipeItem();
+        adapter.enableSwipeItem()
         adapter.setOnItemSwipeListener(object : OnItemSwipeListener {
             override fun onItemSwiped(viewHolder: RecyclerView.ViewHolder?, pos: Int) {
                 mPresenter.deleteCode(adapter.data.get(pos).id)
@@ -126,7 +123,7 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
             }
 
             override fun clearView(viewHolder: RecyclerView.ViewHolder?, pos: Int) {
-                adapter.notifyDataSetChanged()
+
             }
 
         })
@@ -212,6 +209,7 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
 
     fun setCropHeight(cropHeight: Int) {
         CameraManager.FRAME_HEIGHT = cropHeight
+        CameraManager.FRAME_MARGINTOP
     }
 
 
@@ -225,6 +223,7 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
             val cropHeight = mBinding.captureCropLayout.height * height.get() / mBinding.root.height
             setCropWidth(cropWidth)
             setCropHeight(cropHeight)
+            CameraManager.FRAME_MARGINTOP =  (mBinding.root.height - cropHeight) / 2 - mBinding.captureCropLayout.top
         } catch (ioe: IOException) {
             ioe.printStackTrace()
             return
@@ -352,7 +351,7 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
             } catch (e: ReaderException) {
                 // continue
             } finally {
-                multiFormatReader!!.reset()
+                multiFormatReader.reset()
             }
 
             return rawResult
