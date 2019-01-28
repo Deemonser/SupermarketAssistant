@@ -1,8 +1,10 @@
 package com.deemons.supermarketassistant.di.module
 
 import com.deemons.supermarketassistant.base.App
+import com.deemons.supermarketassistant.sql.model.MyObjectBox
 import dagger.Module
 import dagger.Provides
+import io.objectbox.BoxStore
 import javax.inject.Singleton
 
 
@@ -19,6 +21,9 @@ class AppModule constructor(private val app: App) {
     fun provideApplication(): App = app
 
 
+    @Singleton
+    @Provides
+    fun provideBoxStore(): BoxStore = MyObjectBox.builder().androidContext(app).build()
 
 
 }

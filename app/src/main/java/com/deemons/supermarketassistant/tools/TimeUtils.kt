@@ -1,4 +1,4 @@
-package com.followme.basiclib.expand.utils
+package com.deemons.supermarketassistant.tools
 
 import android.app.Application
 import android.support.annotation.StringDef

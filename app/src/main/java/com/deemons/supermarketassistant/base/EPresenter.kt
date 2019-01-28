@@ -1,7 +1,5 @@
-package com.followme.basiclib.mvp.base
+package com.deemons.supermarketassistant.base
 
-import com.deemons.supermarketassistant.base.IView
-import com.deemons.supermarketassistant.base.BasePresenter
 import javax.inject.Inject
 
 /**

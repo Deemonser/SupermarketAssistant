@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="AnimationActivity" parent="@style/AppTheme">
+    </style>
+
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>-->
+        <!--<item name="colorAccent">@color/main_color_orange</item>-->
+        <!--<item name="android:windowAnimationStyle">@style/ActivityLeftRight</item>-->
+        <!--<item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>-->
+    </style>
+
+
+    <style name="Theme.AppCompat.Translucent.followme" parent="@style/AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+
+    <style name="Theme.AppCompat.Translucent.fullScreen" parent="@style/AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+
+    <!-- Base application theme. -->
+    <style name="DefAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="android:windowBackground">@color/bg_color</item>-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SplashTheme" parent="DefAppTheme">
+        <!--<item name="android:windowBackground">@drawable/start_window</item>-->
+        <!--<item name="android:windowAnimationStyle">@style/ActivityLeftRight</item>-->
+    </style>
+
+    <style name="Transparent" parent="DefAppTheme">
+        <item name="android:windowFrame">@null</item>   <!--Dialog的windowFrame框为无-->
+        <item name="android:windowIsTranslucent">false</item> <!--是否半透明-->
+        <item name="android:windowDisablePreview">true</item> <!--支持预览-->
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>  <!--是否显示title-->
+        <item name="android:windowIsFloating">true</item>   <!--是否浮现在activity之上 -->
+        <item name="android:backgroundDimEnabled">true</item> <!--设置黑暗度-->
+        <item name="android:backgroundDimAmount">0.0</item> <!-- 0.0不暗，1.0全暗-->
+    </style>
+
+
+    <style name="DialogActivity" parent="Transparent">
+        <item name="android:backgroundDimAmount">0.3</item> <!-- 0.0不暗，1.0全暗-->
+    </style>
+
+
+    <style name="ScreenShotDialogActStyle" parent="Theme.AppCompat.NoActionBar" >
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="NoBackground_DialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+
+</resources>

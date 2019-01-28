@@ -3,6 +3,7 @@ package com.deemons.supermarketassistant.di.component
 import com.deemons.supermarketassistant.di.module.AppModule
 import com.deemons.supermarketassistant.di.module.NetworkModule
 import dagger.Component
+import io.objectbox.BoxStore
 import javax.inject.Singleton
 
 /**
@@ -11,6 +12,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class, NetworkModule::class])
 interface AppComponent {
+
+    fun boxStore(): BoxStore
 
 
 }

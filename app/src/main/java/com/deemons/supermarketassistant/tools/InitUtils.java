@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.support.annotation.NonNull;
 import com.deemons.supermarketassistant.BuildConfig;
-import com.followme.basiclib.expand.utils.TimeUtils;
 import com.vondear.rxtool.RxTool;
 
 /**

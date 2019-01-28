@@ -1,6 +1,7 @@
 package com.deemons.supermarketassistant.base
 
 import android.app.Application
+import com.alibaba.android.arouter.launcher.ARouter
 import com.deemons.supermarketassistant.di.component.DaggerActivityComponent
 import com.deemons.supermarketassistant.di.component.DaggerAppComponent
 import com.deemons.supermarketassistant.di.module.AppModule
@@ -37,5 +38,7 @@ class App : Application() {
         super.onCreate()
 
         InitUtils.init(this)
+
+        ARouter.init(this)
     }
 }
