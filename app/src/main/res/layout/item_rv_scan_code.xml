@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        tools:background="@color/background_dark"
         android:layout_width="match_parent" android:layout_height="60dp">
 
     <TextView
@@ -10,9 +11,9 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="15dp"
             android:textColor="@color/white"
-            android:textSize="24dp"
+            android:textSize="28sp"
             android:text="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -22,21 +23,25 @@
             android:id="@+id/item_code"
             android:layout_width="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/item_time"
+            app:layout_constraintBottom_toTopOf="@id/item_time"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_marginLeft="20dp"
+            android:textSize="18sp"
             app:layout_constraintLeft_toRightOf="@id/item_index"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/white"
+            tools:text="646465465465"
             android:layout_height="wrap_content"/>
 
 
     <TextView
             android:id="@+id/item_time"
             android:layout_width="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/item_code"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/item_code"
+            app:layout_constraintTop_toBottomOf="@id/item_code"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             android:textColor="@color/white"
+            android:textSize="12sp"
+            tools:text="2018-01-28 23:30:00"
             android:layout_height="wrap_content"/>
 
 
