@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <android.support.constraint.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/real_price"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="45dp"
+                app:layout_constraintRight_toLeftOf="@id/real_price_edit"
+                android:gravity="center"
+                android:text="进价：10"
+                android:layout_width="0dp" android:layout_height="wrap_content"/>
+
+
+        <EditText
+                android:id="@+id/real_price_edit"
+                app:layout_constraintLeft_toRightOf="@id/real_price"
+                app:layout_constraintRight_toRightOf="parent"
+                android:inputType="numberDecimal"
+                android:hint="请输入修改的进价"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="@id/real_price"
+                app:layout_constraintBottom_toBottomOf="@id/real_price"
+                android:layout_width="0dp" android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/selling_price"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/real_price"
+                android:layout_marginTop="20dp"
+                app:layout_constraintRight_toLeftOf="@id/selling_price_edit"
+                android:gravity="center"
+                android:text="售价：10"
+                android:layout_width="0dp" android:layout_height="wrap_content"/>
+
+
+        <EditText
+                android:id="@+id/selling_price_edit"
+                app:layout_constraintLeft_toRightOf="@id/selling_price"
+                app:layout_constraintRight_toRightOf="parent"
+                android:inputType="numberDecimal"
+                android:hint="请输入修改的售价"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="@id/selling_price"
+                app:layout_constraintBottom_toBottomOf="@id/selling_price"
+                android:layout_width="0dp" android:layout_height="wrap_content"/>
+
+
+        <TextView
+                android:id="@+id/count"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/selling_price"
+                android:layout_marginTop="20dp"
+                app:layout_constraintRight_toLeftOf="@id/count_edit"
+                android:gravity="center"
+                android:text="数量：10"
+                android:layout_width="0dp" android:layout_height="wrap_content"/>
+
+
+        <EditText
+                android:id="@+id/count_edit"
+                app:layout_constraintLeft_toRightOf="@id/count"
+                app:layout_constraintRight_toRightOf="parent"
+                android:inputType="number"
+                android:hint="请输入修改的数量"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="@id/count"
+                app:layout_constraintBottom_toBottomOf="@id/count"
+                android:layout_width="0dp" android:layout_height="wrap_content"/>
+
+
+        <Button
+                android:id="@+id/commit"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="确定"
+                app:layout_constraintTop_toBottomOf="@id/count"
+                android:layout_marginTop="30dp"
+                android:layout_margin="15dp"
+                android:layout_width="0dp" android:layout_height="wrap_content"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

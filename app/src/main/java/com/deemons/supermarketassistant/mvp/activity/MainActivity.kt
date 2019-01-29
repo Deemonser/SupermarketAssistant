@@ -17,16 +17,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun scanCode(view: View) {
-        startActivity(Intent(this, ScanCodeActivity::class.java))
+//        startActivity(Intent(this, ScanCodeActivity::class.java))
+        RxToast.showToast("该功能暂时关闭！")
     }
 
     fun history(view: View) {
-        startActivity(Intent(this, ScanCodeHistoryActivity::class.java))
+//        startActivity(Intent(this, ScanCodeHistoryActivity::class.java))
+        RxToast.showToast("该功能暂时关闭！")
     }
 
 
-    fun count(view: View) {
-        RxToast.showToast("功能暂未实现，敬请期待！")
+    fun pandian(view: View) {
+        startActivity(Intent(this, PandianActivity::class.java))
     }
 
+    fun tongji(view: View) {
+        RxToast.showToast("该功能未完待续！")
+    }
 }

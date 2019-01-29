@@ -2,6 +2,8 @@ package com.deemons.supermarketassistant.mvp.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.os.Handler
@@ -33,11 +35,9 @@ import com.vondear.rxfeature.module.scaner.decoding.InactivityTimer
 import com.vondear.rxtool.RxAnimationTool
 import com.vondear.rxtool.RxBarTool
 import com.vondear.rxtool.RxBeepTool
-import io.reactivex.Observable
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 
@@ -253,12 +253,12 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
         mBinding.scanRv.scrollToPosition(0)
 
 
-        //重新开始扫描
-        Observable.timer(2, TimeUnit.SECONDS)
-            .subscribe({
-                CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode)
-                CameraManager.get().requestAutoFocus(decodeThread.getHandler(), R.id.auto_focus)
-            }) { it.printStackTrace() }
+//        //重新开始扫描
+//        Observable.timer(2, TimeUnit.SECONDS)
+//            .subscribe({
+//                CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode)
+//                CameraManager.get().requestAutoFocus(decodeThread.getHandler(), R.id.auto_focus)
+//            }) { it.printStackTrace() }
     }
 
 
@@ -339,7 +339,11 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
                 if (result == null) {
                     CameraManager.get().requestPreviewFrame(this, R.id.decode)
                 } else {
-                    mPresenter.decode(result.text)
+//                    mPresenter.decode(result.text)
+                    val intent = Intent()
+                    intent.putExtra("barCode",result.text)
+                    setResult(Activity.RESULT_OK,intent)
+                    finish()
                 }
             } else if (message.what === R.id.quit) {
                 Looper.myLooper()?.quit()

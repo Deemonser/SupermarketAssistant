@@ -16,6 +16,8 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/DefAppTheme">
+        <activity android:name=".mvp.activity.PandianActivity">
+        </activity>
         <activity android:name=".mvp.activity.ProductDetailActivity">
         </activity>
         <activity android:name=".mvp.activity.MainActivity">

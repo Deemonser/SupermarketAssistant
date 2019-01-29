@@ -1,6 +1,7 @@
 package com.deemons.supermarketassistant.di.component
 
 import com.deemons.supermarketassistant.di.scope.ActivityScope
+import com.deemons.supermarketassistant.mvp.activity.PandianActivity
 import com.deemons.supermarketassistant.mvp.activity.ProductDetailActivity
 import com.deemons.supermarketassistant.mvp.activity.ScanCodeActivity
 import com.deemons.supermarketassistant.mvp.activity.ScanCodeHistoryActivity
@@ -19,5 +20,6 @@ interface ActivityComponent {
     fun inject(scanCodeActivity: ScanCodeActivity)
     fun inject(scanCodeActivity: ScanCodeHistoryActivity)
     fun inject(productDetailActivity: ProductDetailActivity)
+    fun inject(pandianActivity: PandianActivity)
 
 }
