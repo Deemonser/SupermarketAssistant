@@ -1,5 +1,7 @@
 package com.deemons.supermarketassistant.net.api
 
+import com.deemons.supermarketassistant.net.model.GoodsBean
+import com.deemons.supermarketassistant.net.model.GoodsBean2
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -22,6 +24,29 @@ interface Api {
         @Query("productCode") productCode: String,
         @Query("mac") mac: String
     ): Observable<String>
+
+
+    /**
+     *  获取商品信息
+     *  http://app.cjtecc.cn/barcode/eandetail.php
+     */
+    @GET()
+    abstract fun getGoods(
+        @Url url: String,
+        @Query("ean") barcode: String
+    ): Observable<GoodsBean>
+
+
+    /**
+     *  获取商品信息
+     *  http://www.mxnzp.com/api/barcode/goods/details
+     */
+    @GET()
+    abstract fun getGoods2(
+        @Url url: String,
+        @Query("barcode") barcode: String,
+        @Query("needImg") needImg: Boolean
+    ): Observable<GoodsBean2>
 
 
     @FormUrlEncoded

@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executors
 
@@ -38,6 +39,11 @@ fun <T> Observable<T>._io(): Observable<T> {
 
 fun <T> Observable<T>._main(): Observable<T> {
     return this.observeOn(AndroidSchedulers.mainThread())
+}
+
+
+fun <T> Observable<T>.subscribeSafe(function: (T) -> Unit): Disposable {
+    return this.subscribe(function, { it.printStackTrace() })
 }
 
 

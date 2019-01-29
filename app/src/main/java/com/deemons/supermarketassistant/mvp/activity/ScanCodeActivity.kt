@@ -12,8 +12,11 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.text.TextUtils
 import android.util.Log
 import android.view.SurfaceHolder
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback
@@ -223,7 +226,7 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
             val cropHeight = mBinding.captureCropLayout.height * height.get() / mBinding.root.height
             setCropWidth(cropWidth)
             setCropHeight(cropHeight)
-            CameraManager.FRAME_MARGINTOP =  (mBinding.root.height - cropHeight) / 2 - mBinding.captureCropLayout.top
+            CameraManager.FRAME_MARGINTOP = (mBinding.root.height - cropHeight) / 2 - mBinding.captureCropLayout.top
         } catch (ioe: IOException) {
             ioe.printStackTrace()
             return
@@ -265,13 +268,31 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
             helper.setText(R.id.item_index, (this.itemCount - helper.layoutPosition).toString())
                 .setText(R.id.item_code, item.code)
                 .setText(R.id.item_time, item.time)
+                .setText(R.id.item_name, item.name)
+                .setText(R.id.item_price, if (item.price.contains('¥')) "" else "¥" + item.price)
+                .setGone(R.id.item_image, !TextUtils.isEmpty(item.image))
+                .setGone(R.id.item_name, !TextUtils.isEmpty(item.name))
+                .setGone(R.id.item_price, !TextUtils.isEmpty(item.price))
 
+            if (!TextUtils.isEmpty(item.image)) {
+                val imageView = helper.getView<ImageView>(R.id.item_image)
+                Glide.with(imageView)
+                    .load(item.image)
+                    .into(imageView)
+            }
         }
 
     }
 
 
-    data class ScanCodeViewBean(val id: Long, val code: String, val time: String)
+    data class ScanCodeViewBean(
+        val id: String,
+        val code: String,
+        val image: String,
+        val name: String,
+        val price: String,
+        val time: String
+    )
 
 
     // 一堆乱七八糟的东西
@@ -387,8 +408,8 @@ class ScanCodeActivity : BaseActivity<ScanCodePresenter, ActivityScanCodeBinding
 
                 // 这里设置可扫描的类型，我这里选择了都支持
                 decodeFormats.addAll(ONE_D_FORMATS)
-                decodeFormats.addAll(QR_CODE_FORMATS)
-                decodeFormats.addAll(DATA_MATRIX_FORMATS)
+//                decodeFormats.addAll(QR_CODE_FORMATS)
+//                decodeFormats.addAll(DATA_MATRIX_FORMATS)
             }
             hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats)
 

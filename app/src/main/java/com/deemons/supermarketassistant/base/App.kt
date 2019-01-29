@@ -1,6 +1,7 @@
 package com.deemons.supermarketassistant.base
 
 import android.app.Application
+import cn.bmob.v3.Bmob
 import com.alibaba.android.arouter.launcher.ARouter
 import com.deemons.supermarketassistant.di.component.DaggerActivityComponent
 import com.deemons.supermarketassistant.di.component.DaggerAppComponent
@@ -40,5 +41,7 @@ class App : Application() {
         InitUtils.init(this)
 
         ARouter.init(this)
+
+        Bmob.initialize(this, "497dfb95af3a40bf622be85d46bd3498");
     }
 }

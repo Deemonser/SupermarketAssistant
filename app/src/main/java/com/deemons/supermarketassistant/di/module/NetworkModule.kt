@@ -59,7 +59,7 @@ class NetworkModule {
     fun provideHeaderInterceptor(): HeaderInterceptor {
         val map = hashMapOf(
             Pair("Connection", "Keep-Alive"),
-            Pair("User-Agent", "Mozilla/5.0(Linux;U;Android 2.2.1;en-us;Nexus One Build.FRG83) AppleWebKit/553.1(KHTML,like Gecko) Version/4.0 Mobile Safari/533.1")
+            Pair("UserModel-Agent", "Mozilla/5.0(Linux;U;Android 2.2.1;en-us;Nexus One Build.FRG83) AppleWebKit/553.1(KHTML,like Gecko) Version/4.0 Mobile Safari/533.1")
         )
         return HeaderInterceptor(map) { url, map -> }
     }

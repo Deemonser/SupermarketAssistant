@@ -12,7 +12,7 @@ open class BasePresenter<V : IView> : IPresenter {
     var mView: V? = null
 
     private val mDisposableDelegate = lazy { CompositeDisposable() }
-    protected val mDisposable by mDisposableDelegate
+    val mDisposable by mDisposableDelegate
 
     @Suppress("UNCHECKED_CAST")
     override fun attachView(view: IView) {

@@ -6,7 +6,7 @@
     </style>
 
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="QMUI.Compat.NoActionBar">
         <!--<item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>-->
         <!--<item name="colorAccent">@color/main_color_orange</item>-->
         <!--<item name="android:windowAnimationStyle">@style/ActivityLeftRight</item>-->
@@ -33,7 +33,7 @@
 
 
     <!-- Base application theme. -->
-    <style name="DefAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DefAppTheme" parent="QMUI.Compat.NoActionBar">
         <!--<item name="android:windowBackground">@color/bg_color</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

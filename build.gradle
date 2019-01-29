@@ -18,6 +18,7 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 
@@ -29,6 +30,7 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
         maven { url "http://objectbox.net/beta-repo/" }//objectbox数据库
+        maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
     }
 }
 
