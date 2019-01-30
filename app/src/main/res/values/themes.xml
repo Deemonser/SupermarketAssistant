@@ -42,7 +42,7 @@
     </style>
 
     <style name="SplashTheme" parent="DefAppTheme">
-        <!--<item name="android:windowBackground">@drawable/start_window</item>-->
+        <item name="android:windowBackground">@drawable/start_window</item>
         <!--<item name="android:windowAnimationStyle">@style/ActivityLeftRight</item>-->
     </style>
 

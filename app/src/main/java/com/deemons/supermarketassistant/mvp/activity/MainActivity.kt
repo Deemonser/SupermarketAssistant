@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun tongji(view: View) {
-        RxToast.showToast("该功能未完待续！")
+//        RxToast.showToast("该功能未完待续！")
+        startActivity(Intent(this, TongjiActivity::class.java))
     }
 }

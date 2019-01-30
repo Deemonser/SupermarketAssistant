@@ -1,34 +1,35 @@
 package com.deemons.supermarketassistant.mvp.activity
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import cn.bmob.v3.BmobQuery
 import com.blankj.utilcode.util.KeyboardUtils
-import com.chad.library.adapter.base.BaseItemDraggableAdapter
-import com.chad.library.adapter.base.BaseViewHolder
 import com.deemons.supermarketassistant.R
 import com.deemons.supermarketassistant.base.BaseActivity
 import com.deemons.supermarketassistant.base.EPresenter
-import com.deemons.supermarketassistant.databinding.ActivityPandianBinding
+import com.deemons.supermarketassistant.databinding.ActivityTongjiBinding
 import com.deemons.supermarketassistant.databinding.DialogEditBinding
 import com.deemons.supermarketassistant.di.component.ActivityComponent
 import com.deemons.supermarketassistant.expand.bindLoadingDialog
 import com.deemons.supermarketassistant.sql.bmob.Tmp_Goods
+import com.deemons.supermarketassistant.tools.bind
 import com.deemons.supermarketassistant.tools.io_main
+import com.deemons.supermarketassistant.tools.schedulerIO
 import com.vondear.rxtool.view.RxToast
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.function.BiFunction
 
-class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
+
+class TongjiActivity : BaseActivity<EPresenter, ActivityTongjiBinding>() {
 
     val query by lazy { BmobQuery<Tmp_Goods>() }
 
-    private val adapter by lazy { SearchAdapter(mutableListOf()) }
+    private val adapter by lazy { PandianActivity.SearchAdapter(mutableListOf()) }
 
-    override fun getLayout(): Int = R.layout.activity_pandian
+    override fun getLayout(): Int = R.layout.activity_tongji
 
     override fun componentInject(activityComponent: ActivityComponent) {
         activityComponent.inject(this)
@@ -49,19 +50,8 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
         }
 
 
-        mBinding.productSearch.setOnClickListener {
-            if (mBinding.productEdit.text.toString().isNotBlank()) {
-                KeyboardUtils.hideSoftInput(this)
-                findData(mBinding.productEdit.text.toString())
-            }
-        }
 
-        mBinding.productScan.setOnClickListener {
-            startActivityForResult(
-                Intent(this, ScanCodeActivity::class.java),
-                1
-            )
-        }
+        findData()
 
     }
 
@@ -108,64 +98,52 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
             .bindLoadingDialog(this)
             .subscribe({
                 RxToast.showToast("修改成功")
-                mBinding.productSearch.callOnClick()
+                findData()
             }, { it.printStackTrace() })
     }
 
-    private fun findData(code: String) {
-        Observable.just(code)
+    private fun findData() {
+
+
+        Observable.just(query)
             .bindLoadingDialog(this)
             .flatMap {
-                query.or(
-                    listOf(
-                        BmobQuery<Tmp_Goods>().addWhereContains("name", code),
-                        BmobQuery<Tmp_Goods>().addWhereContains("barCode", code)
-                    )
-                )
-                    .findObjectsObservable(Tmp_Goods::class.java)
+                query.addWhereGreaterThanOrEqualTo("count", 1)
+                    .countObservable(Tmp_Goods::class.java)
             }
+            .observeOn(schedulerIO)
+            .map {
+                val page = it / 500
+                val list = mutableListOf<Int>()
+                for (i in 0..page)
+                    list.add(i)
+                return@map list
+            }
+            .map {
+                val result = mutableListOf<Tmp_Goods>()
+                it.forEach {
+                    result.addAll(
+                        query.setLimit(500).setSkip(500 * it)
+                            .addWhereGreaterThanOrEqualTo("count", 1)
+                            .findObjectsSync(Tmp_Goods::class.java)
+                    )
+                }
+                result
+            }
+            .map {
+                var countPrice = 0f
+                it.forEach { countPrice += it.realPrice.replace("￥", "").replace(",", "").toFloat() * it.count }
+                Pair(it, countPrice)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                adapter.setNewData(it)
+                adapter.setNewData(it.first)
             }, {
                 it.printStackTrace()
                 adapter.setNewData(mutableListOf())
-            })
+            }).bind(mPresenter.mDisposable)
 
 
     }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == 1 && data != null) {
-            mBinding.productEdit.setText(data.getStringExtra("barCode") ?: "")
-            mBinding.productEdit.setSelection(mBinding.productEdit.text.length)
-            mBinding.productSearch.callOnClick()
-        }
-    }
-
-    internal class SearchAdapter(data: MutableList<Tmp_Goods>) :
-        BaseItemDraggableAdapter<Tmp_Goods, BaseViewHolder>(R.layout.item_rv_pandian_search, data) {
-        override fun convert(helper: BaseViewHolder, item: Tmp_Goods) {
-
-
-            helper.setText(R.id.item_index, helper.layoutPosition.toString())
-                .setText(R.id.item_code, item.barCode)
-                .setText(R.id.item_name, item.name)
-                .setText(R.id.item_price, "进价：${item.realPrice}")
-                .setText(R.id.item_selling, "售价：${item.sellingPrice}")
-                .setText(R.id.item_count, "数量：${item.count}")
-                .setText(R.id.item_add, "成本总计：")
-
-
-            item.realPrice.replace("￥", "").replace(",", "")
-                .toFloatOrNull()?.let {
-                    helper.setText(R.id.item_add, "成本总计：${it * item.count}")
-                }
-
-        }
-
-    }
-
 
 }

@@ -23,5 +23,13 @@ class NetService @Inject constructor(val api: Api) {
         return api.getGoods2("http://www.mxnzp.com/api/barcode/goods/details", barCode, true)
     }
 
+    fun getGoodsDetail3(barCode: String): Observable<String> {
+        return api.getProductData(
+            "http://webapi.chinatrace.org/api/getProductData",
+            barCode,
+            "8BF8634ABC27F2A21B66D9148F7D080BE0C2BF712E57A568D071B612397E6392"
+        )
+    }
+
 
 }

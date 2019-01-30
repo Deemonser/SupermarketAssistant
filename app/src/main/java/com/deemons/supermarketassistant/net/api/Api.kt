@@ -19,8 +19,9 @@ interface Api {
     /**
      * http://webapi.chinatrace.org/api/getProductData?productCode=6954306880269&mac=8BF8634ABC27F2A21B66D9148F7D080BE0C2BF712E57A568D071B612397E6392
      */
-    @GET("api/getProductData")
+    @GET()
     abstract fun getProductData(
+        @Url url: String,
         @Query("productCode") productCode: String,
         @Query("mac") mac: String
     ): Observable<String>

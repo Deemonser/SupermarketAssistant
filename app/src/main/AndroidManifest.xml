@@ -16,20 +16,29 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/DefAppTheme">
-        <activity android:name=".mvp.activity.PandianActivity">
-        </activity>
-        <activity android:name=".mvp.activity.ProductDetailActivity">
-        </activity>
-        <activity android:name=".mvp.activity.MainActivity">
+
+        <activity android:name=".base.SplashActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/SplashTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".mvp.activity.PandianActivity"/>
+        <activity android:name=".mvp.activity.TongjiActivity"/>
+
+        <activity android:name=".mvp.activity.ProductDetailActivity"/>
+
+        <activity android:name=".mvp.activity.MainActivity"/>
+
         <activity
                 android:name=".mvp.activity.ScanCodeActivity"
                 android:screenOrientation="portrait"/>
+
         <activity android:name=".mvp.activity.ScanCodeHistoryActivity"/>
 
         <provider
