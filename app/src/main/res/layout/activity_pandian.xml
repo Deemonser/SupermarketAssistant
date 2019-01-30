@@ -38,6 +38,7 @@
                     android:hint="请输入条码或名称"
                     android:textColorHint="@color/white"
                     android:layout_marginStart="15dp"
+                    android:imeOptions="actionSearch"
                     android:textColor="@color/white"
                     android:singleLine="true"
                     android:textSize="12dp"

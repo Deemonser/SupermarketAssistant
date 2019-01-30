@@ -9,13 +9,15 @@ import cn.bmob.v3.BmobObject;
  */
 public class Tmp_Goods extends BmobObject {
 
+
     public String sellingPrice;
+
     public String barCode;
     public String name;
     public String standard;
     public String realPrice;
     public String unit;
     public int count;
-
+    public float amount;
 
 }

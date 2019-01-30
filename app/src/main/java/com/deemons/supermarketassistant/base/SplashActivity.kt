@@ -43,18 +43,18 @@ class SplashActivity : BaseActivity<EPresenter, ActivitySplashBinding>() {
 
 //        initAppData()
 
-        Observable.timer(2, TimeUnit.SECONDS).subscribe { toMain() }.bind(mPresenter.mDisposable)
+        Observable.timer(1500, TimeUnit.MILLISECONDS).subscribe { toMain() }.bind(mPresenter.mDisposable)
     }
 
     private fun startAnimation() {
         val animation =
             ScaleAnimation(1f, 2f, 1f, 2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-        animation.duration = 1000
+        animation.duration = 800
         animation.fillAfter = true
         mBinding.splashIv.startAnimation(animation)
 
         val alphaAnimation = AlphaAnimation(0f, 1f)
-        alphaAnimation.duration = 1000
+        alphaAnimation.duration = 800
         mBinding.splashTv.text = "Powered by Deemons ${AppUtils.getAppVersionName()}© 20019-2020"
         mBinding.splashTv.startAnimation(alphaAnimation)
     }

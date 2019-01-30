@@ -6,6 +6,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
 import cn.bmob.v3.BmobQuery
 import com.blankj.utilcode.util.KeyboardUtils
 import com.chad.library.adapter.base.BaseItemDraggableAdapter
@@ -18,13 +19,14 @@ import com.deemons.supermarketassistant.databinding.DialogEditBinding
 import com.deemons.supermarketassistant.di.component.ActivityComponent
 import com.deemons.supermarketassistant.expand.bindLoadingDialog
 import com.deemons.supermarketassistant.sql.bmob.Tmp_Goods
+import com.deemons.supermarketassistant.tools.ResUtils
+import com.deemons.supermarketassistant.tools.bind
 import com.deemons.supermarketassistant.tools.io_main
 import com.vondear.rxtool.view.RxToast
 import io.reactivex.Observable
 
 class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
 
-    val query by lazy { BmobQuery<Tmp_Goods>() }
 
     private val adapter by lazy { SearchAdapter(mutableListOf()) }
 
@@ -61,6 +63,15 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
                 Intent(this, ScanCodeActivity::class.java),
                 1
             )
+        }
+
+        mBinding.productEdit.setOnEditorActionListener { p0, p1, p2 ->
+            if (p1 == EditorInfo.IME_ACTION_SEARCH && p0.text.isNotBlank()) {
+                KeyboardUtils.hideSoftInput(this)
+                findData(mBinding.productEdit.text.toString())
+                return@setOnEditorActionListener false
+            }
+            return@setOnEditorActionListener true
         }
 
     }
@@ -103,6 +114,7 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
 
     private fun updateGoods(goods: Tmp_Goods) {
         Observable.just(goods)
+            .doOnNext { it.amount = it.count * it.realPrice.toFloat() }
             .doOnNext { it.updateSync() }
             .io_main()
             .bindLoadingDialog(this)
@@ -110,13 +122,14 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
                 RxToast.showToast("修改成功")
                 mBinding.productSearch.callOnClick()
             }, { it.printStackTrace() })
+            .bind(mPresenter.mDisposable)
     }
 
     private fun findData(code: String) {
         Observable.just(code)
             .bindLoadingDialog(this)
             .flatMap {
-                query.or(
+                BmobQuery<Tmp_Goods>().or(
                     listOf(
                         BmobQuery<Tmp_Goods>().addWhereContains("name", code),
                         BmobQuery<Tmp_Goods>().addWhereContains("barCode", code)
@@ -124,12 +137,20 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
                 )
                     .findObjectsObservable(Tmp_Goods::class.java)
             }
+            .map {
+                for (goods in it) {
+                    goods.realPrice = goods.realPrice.replace("￥", "").replace(",", "")
+                    goods.sellingPrice = goods.sellingPrice.replace("￥", "").replace(",", "")
+                }
+                it
+            }
             .subscribe({
+                adapter.count = it.size
                 adapter.setNewData(it)
             }, {
                 it.printStackTrace()
                 adapter.setNewData(mutableListOf())
-            })
+            }).bind(mPresenter.mDisposable)
 
 
     }
@@ -146,22 +167,19 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
 
     internal class SearchAdapter(data: MutableList<Tmp_Goods>) :
         BaseItemDraggableAdapter<Tmp_Goods, BaseViewHolder>(R.layout.item_rv_pandian_search, data) {
+
+        var count = 0
+
         override fun convert(helper: BaseViewHolder, item: Tmp_Goods) {
 
 
-            helper.setText(R.id.item_index, helper.layoutPosition.toString())
+            helper.setText(R.id.item_index, (count - data.indexOf(item)).toString())
                 .setText(R.id.item_code, item.barCode)
                 .setText(R.id.item_name, item.name)
                 .setText(R.id.item_price, "进价：${item.realPrice}")
                 .setText(R.id.item_selling, "售价：${item.sellingPrice}")
                 .setText(R.id.item_count, "数量：${item.count}")
-                .setText(R.id.item_add, "成本总计：")
-
-
-            item.realPrice.replace("￥", "").replace(",", "")
-                .toFloatOrNull()?.let {
-                    helper.setText(R.id.item_add, "成本总计：${it * item.count}")
-                }
+                .setText(R.id.item_add, ResUtils.getString("成本总计：%.2f", item.realPrice.toFloat() * item.count))
 
         }
 

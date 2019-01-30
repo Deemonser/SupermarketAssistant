@@ -5,6 +5,8 @@ import android.databinding.DataBindingUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import cn.bmob.v3.BmobQuery
+import cn.bmob.v3.exception.BmobException
+import cn.bmob.v3.listener.CountListener
 import com.blankj.utilcode.util.KeyboardUtils
 import com.deemons.supermarketassistant.R
 import com.deemons.supermarketassistant.base.BaseActivity
@@ -14,18 +16,18 @@ import com.deemons.supermarketassistant.databinding.DialogEditBinding
 import com.deemons.supermarketassistant.di.component.ActivityComponent
 import com.deemons.supermarketassistant.expand.bindLoadingDialog
 import com.deemons.supermarketassistant.sql.bmob.Tmp_Goods
+import com.deemons.supermarketassistant.tools.ResUtils
 import com.deemons.supermarketassistant.tools.bind
 import com.deemons.supermarketassistant.tools.io_main
-import com.deemons.supermarketassistant.tools.schedulerIO
 import com.vondear.rxtool.view.RxToast
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.util.function.BiFunction
 
 
 class TongjiActivity : BaseActivity<EPresenter, ActivityTongjiBinding>() {
 
-    val query by lazy { BmobQuery<Tmp_Goods>() }
+    var page = 0
+
 
     private val adapter by lazy { PandianActivity.SearchAdapter(mutableListOf()) }
 
@@ -43,16 +45,15 @@ class TongjiActivity : BaseActivity<EPresenter, ActivityTongjiBinding>() {
         mBinding.productRv.layoutManager = LinearLayoutManager(this)
         mBinding.productRv.adapter = adapter
 
+        adapter.loadMoreEnd(true)
+        adapter.setOnLoadMoreListener({ findData() }, mBinding.productRv)
 
         adapter.setOnItemClickListener { adapter, view, position ->
             val goods = this.adapter.data.getOrNull(position) ?: return@setOnItemClickListener
             showEditDialog(goods)
         }
 
-
-
         findData()
-
     }
 
     private fun showEditDialog(goods: Tmp_Goods) {
@@ -93,57 +94,71 @@ class TongjiActivity : BaseActivity<EPresenter, ActivityTongjiBinding>() {
 
     private fun updateGoods(goods: Tmp_Goods) {
         Observable.just(goods)
+            .doOnNext { it.amount = it.count * it.realPrice.toFloat() }
             .doOnNext { it.updateSync() }
             .io_main()
             .bindLoadingDialog(this)
             .subscribe({
                 RxToast.showToast("修改成功")
+                page = 0
                 findData()
             }, { it.printStackTrace() })
+            .bind(mPresenter.mDisposable)
     }
 
     private fun findData() {
 
+        if (page <= 0) {
+            BmobQuery<Tmp_Goods>().addWhereGreaterThanOrEqualTo("count", 1)
+                .count(Tmp_Goods::class.java, object : CountListener() {
+                    override fun done(p0: Int?, p1: BmobException?) {
+                        if (p1 == null && p0 != null) {
+                            adapter.count = p0
+                        }
+                    }
+                })
+        }
 
-        Observable.just(query)
+        Observable.just(BmobQuery<Tmp_Goods>())
             .bindLoadingDialog(this)
             .flatMap {
-                query.addWhereGreaterThanOrEqualTo("count", 1)
-                    .countObservable(Tmp_Goods::class.java)
+                it.setLimit(500).setSkip(500 * (page++))
+                    .addWhereGreaterThanOrEqualTo("count", 1)
+                    .findObjectsObservable(Tmp_Goods::class.java)
             }
-            .observeOn(schedulerIO)
-            .map {
-                val page = it / 500
-                val list = mutableListOf<Int>()
-                for (i in 0..page)
-                    list.add(i)
-                return@map list
-            }
-            .map {
-                val result = mutableListOf<Tmp_Goods>()
+            .doOnNext {
                 it.forEach {
-                    result.addAll(
-                        query.setLimit(500).setSkip(500 * it)
-                            .addWhereGreaterThanOrEqualTo("count", 1)
-                            .findObjectsSync(Tmp_Goods::class.java)
-                    )
+                    it.realPrice = it.realPrice.replace("￥", "").replace(",", "")
+                    it.sellingPrice = it.sellingPrice.replace("￥", "").replace(",", "")
+                    it.amount = it.realPrice.toFloat() * it.count
                 }
-                result
-            }
-            .map {
-                var countPrice = 0f
-                it.forEach { countPrice += it.realPrice.replace("￥", "").replace(",", "").toFloat() * it.count }
-                Pair(it, countPrice)
             }
             .observeOn(AndroidSchedulers.mainThread())
+            .doFinally { amount() }
             .subscribe({
-                adapter.setNewData(it.first)
+                if (page <= 1) {
+                    adapter.setNewData(it)
+                } else if (it.size > 0) {
+                    adapter.addData(it)
+                    adapter.loadMoreComplete()
+                } else {
+                    adapter.loadMoreEnd(true)
+                }
             }, {
                 it.printStackTrace()
                 adapter.setNewData(mutableListOf())
             }).bind(mPresenter.mDisposable)
 
 
+    }
+
+    private fun amount() {
+        BmobQuery<Tmp_Goods>().sum(arrayOf("amount")).findStatisticsObservable(Tmp_Goods::class.java)
+            .map { it.getJSONObject(0).getDouble("_sumAmount") }
+            .subscribe({
+                mBinding.productCount.text = ResUtils.getString("￥%.2f", it)
+            }, { it.printStackTrace() })
+            .bind(mPresenter.mDisposable)
     }
 
 }
