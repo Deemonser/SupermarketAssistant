@@ -125,6 +125,8 @@ dependencies {
     implementation 'cn.bmob.android:bmob-sdk:3.6.9'
     implementation 'cn.bmob.android:http-legacy:1.0'
     implementation 'com.qmuiteam:qmui:1.1.6'
+
+    implementation 'com.contrarywind:Android-PickerView:4.1.7'
 }
 
 

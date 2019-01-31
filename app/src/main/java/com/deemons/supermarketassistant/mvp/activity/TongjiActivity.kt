@@ -108,19 +108,18 @@ class TongjiActivity : BaseActivity<EPresenter, ActivityTongjiBinding>() {
 
     private fun findData() {
 
-        if (page <= 0) {
-            BmobQuery<Tmp_Goods>().addWhereGreaterThanOrEqualTo("count", 1)
-                .count(Tmp_Goods::class.java, object : CountListener() {
-                    override fun done(p0: Int?, p1: BmobException?) {
-                        if (p1 == null && p0 != null) {
-                            adapter.count = p0
-                        }
-                    }
-                })
-        }
-
         Observable.just(BmobQuery<Tmp_Goods>())
             .bindLoadingDialog(this)
+            .flatMap {
+                if (page <= 0) {
+                    it.addWhereGreaterThanOrEqualTo("count", 1)
+                        .countObservable(Tmp_Goods::class.java)
+                        .doOnNext { adapter.count = it }
+                        .map { BmobQuery<Tmp_Goods>() }
+                } else {
+                    Observable.just(it)
+                }
+            }
             .flatMap {
                 it.setLimit(500).setSkip(500 * (page++))
                     .addWhereGreaterThanOrEqualTo("count", 1)

@@ -1,20 +1,29 @@
 package com.deemons.supermarketassistant.mvp.activity
 
 import android.content.Intent
+import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.deemons.supermarketassistant.R
+import com.deemons.supermarketassistant.base.BaseActivity
+import com.deemons.supermarketassistant.base.EPresenter
+import com.deemons.supermarketassistant.databinding.ActivityMainBinding
+import com.deemons.supermarketassistant.di.component.ActivityComponent
 import com.vondear.rxtool.view.RxToast
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<EPresenter, ActivityMainBinding>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun getLayout(): Int = R.layout.activity_main
 
+    override fun componentInject(activityComponent: ActivityComponent) {
+        activityComponent.inject(this)
+    }
+
+    override fun initEventAndData() {
 
     }
+
 
     fun scanCode(view: View) {
 //        startActivity(Intent(this, ScanCodeActivity::class.java))

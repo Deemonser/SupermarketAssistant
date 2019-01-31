@@ -1,5 +1,6 @@
 package com.deemons.supermarketassistant.base
 
+import android.content.pm.ActivityInfo
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.os.Bundle
@@ -24,11 +25,12 @@ abstract class BaseActivity<P : IPresenter, B : ViewDataBinding> : RxAppCompatAc
     lateinit var mPresenter: P
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        onCreateBefore()
         super.onCreate(savedInstanceState)
-        onCreateAfter()
+        onCreateBefore()
 
         mBinding = DataBindingUtil.setContentView(this, getLayout())
+
+        onCreateAfter()
 
         componentInject((application as App).activityComponent)
 
@@ -49,7 +51,9 @@ abstract class BaseActivity<P : IPresenter, B : ViewDataBinding> : RxAppCompatAc
 
     final override fun getContext(): RxAppCompatActivity = this
 
-    open fun onCreateAfter() {}
+    open fun onCreateAfter() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
 
     open fun onCreateBefore() {}
 

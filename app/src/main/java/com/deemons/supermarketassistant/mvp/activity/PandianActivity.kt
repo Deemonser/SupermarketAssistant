@@ -5,7 +5,10 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import cn.bmob.v3.BmobQuery
 import com.blankj.utilcode.util.KeyboardUtils
@@ -19,6 +22,7 @@ import com.deemons.supermarketassistant.databinding.DialogEditBinding
 import com.deemons.supermarketassistant.di.component.ActivityComponent
 import com.deemons.supermarketassistant.expand.bindLoadingDialog
 import com.deemons.supermarketassistant.sql.bmob.Tmp_Goods
+import com.deemons.supermarketassistant.tools.LogUtils
 import com.deemons.supermarketassistant.tools.ResUtils
 import com.deemons.supermarketassistant.tools.bind
 import com.deemons.supermarketassistant.tools.io_main
@@ -66,6 +70,7 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
         }
 
         mBinding.productEdit.setOnEditorActionListener { p0, p1, p2 ->
+            LogUtils.d("setOnEditorActionListener $p1")
             if (p1 == EditorInfo.IME_ACTION_SEARCH && p0.text.isNotBlank()) {
                 KeyboardUtils.hideSoftInput(this)
                 findData(mBinding.productEdit.text.toString())
@@ -73,6 +78,33 @@ class PandianActivity : BaseActivity<EPresenter, ActivityPandianBinding>() {
             }
             return@setOnEditorActionListener true
         }
+
+        mBinding.productClean.setOnClickListener {
+            mBinding.productEdit.text.clear()
+        }
+
+        mBinding.productEdit.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable) {
+                // 清除 按钮显示隐藏
+                if (p0.isNotEmpty()) {
+                    if (View.VISIBLE != mBinding.productClean.visibility) {
+                        mBinding.productClean.visibility = View.VISIBLE
+                    }
+                } else if (View.GONE != mBinding.productClean.visibility) {
+                    mBinding.productClean.visibility = View.INVISIBLE
+                }
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+
 
     }
 

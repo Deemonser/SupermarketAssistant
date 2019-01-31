@@ -20,5 +20,6 @@ interface ActivityComponent {
     fun inject(pandianActivity: PandianActivity)
     fun inject(splashActivity: SplashActivity)
     fun inject(tongjiActivity: TongjiActivity)
+    fun inject(activity: MainActivity)
 
 }
