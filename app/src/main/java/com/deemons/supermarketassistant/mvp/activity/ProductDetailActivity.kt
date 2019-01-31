@@ -38,6 +38,8 @@ class ProductDetailActivity : BaseActivity<ProductDetailPresenter, ActivityProdu
 
     override fun initEventAndData() {
 
+        if (barCode.isBlank()) return
+
         initData()
 
         initListener()
@@ -61,7 +63,7 @@ class ProductDetailActivity : BaseActivity<ProductDetailPresenter, ActivityProdu
         mBinding.productName.text = data.name
         mBinding.productPrice.text = "价格：${data.price}"
         mBinding.productStandard.text = "规格：${data.standard}"
-        mBinding. productBrand.text = "品牌：${data.brand}"
+        mBinding.productBrand.text = "品牌：${data.brand}"
         mBinding.productBarCode.text = "条码：${data.barCode}"
         mBinding.productSupplier.text = "供应商：${data.supplier}"
 //        mBinding.productRealCountPrice.text = "成本总计：${data.realPrice}"
