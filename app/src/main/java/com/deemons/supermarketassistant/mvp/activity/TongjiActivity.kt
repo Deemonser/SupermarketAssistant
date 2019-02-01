@@ -48,9 +48,15 @@ class TongjiActivity : BaseActivity<EPresenter, ActivityTongjiBinding>() {
         adapter.loadMoreEnd(true)
         adapter.setOnLoadMoreListener({ findData() }, mBinding.productRv)
 
-        adapter.setOnItemClickListener { adapter, view, position ->
-            val goods = this.adapter.data.getOrNull(position) ?: return@setOnItemClickListener
+        adapter.setOnItemLongClickListener { adapter, view, position ->
+            val goods = this.adapter.data.getOrNull(position) ?: return@setOnItemLongClickListener false
             showEditDialog(goods)
+            true
+        }
+
+        adapter.setOnItemClickListener{adapter, view, position ->
+            val goods = this.adapter.data.getOrNull(position) ?: return@setOnItemClickListener
+            ProductDetailActivity.startActivity(goods.barCode )
         }
 
         findData()
